@@ -15,10 +15,16 @@ export default function HotelReviews({ hotelId }) {
     const fetchReviews = async () => {
       try {
         const res = await fetch(`http://localhost:3001/api/reviews?hotelId=${hotelId}`);
+        
+        if (!res.ok) {
+          throw new Error('Failed to fetch reviews');
+        }
+
         const data = await res.json();
-        setReviews(data);
+        setReviews(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error('Failed to fetch reviews:', err);
+        console.error('Error:', err);
+        setReviews([]);
       } finally {
         setLoading(false);
       }
@@ -26,11 +32,14 @@ export default function HotelReviews({ hotelId }) {
     
     fetchReviews();
   }, [hotelId]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!user) return;
-    
+    if (!user) {
+      alert('Please login to submit a review');
+      navigate('/login');
+      return;
+    }
+  
     try {
       const res = await fetch('http://localhost:3001/api/reviews', {
         method: 'POST',
@@ -39,19 +48,25 @@ export default function HotelReviews({ hotelId }) {
           'Authorization': `Bearer ${user.token}`
         },
         body: JSON.stringify({
-          hotelId,
+          hotel_id: hotelId,
           rating: newReview.rating,
           comment: newReview.comment
         })
       });
+  
+      const data = await res.json();
       
-      if (res.ok) {
-        const savedReview = await res.json();
-        setReviews(prev => [savedReview, ...prev]);
-        setNewReview({ rating: 5, comment: '' });
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to submit review');
       }
+  
+      // Refresh reviews after successful submission
+      fetchReviews();
+      setNewReview({ rating: 5, comment: '' });
+      
     } catch (err) {
-      console.error('Failed to submit review:', err);
+      alert(err.message);
+      console.error('Submission error:', err);
     }
   };
 
@@ -68,7 +83,7 @@ export default function HotelReviews({ hotelId }) {
             <label>Rating:</label>
             <select 
               value={newReview.rating}
-              onChange={(e) => setNewReview({...newReview, rating: e.target.value})}
+              onChange={(e) => setNewReview({...newReview, rating: Number(e.target.value)})}
             >
               {[5, 4, 3, 2, 1].map(num => (
                 <option key={num} value={num}>{num} ★</option>
@@ -95,7 +110,9 @@ export default function HotelReviews({ hotelId }) {
                 <span className={styles.reviewRating}>
                   {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
                 </span>
-                <span className={styles.reviewUser}>{review.user.name}</span>
+                <span className={styles.reviewUser}>
+                  {review.user?.name || 'Anonymous'}
+                </span>
                 <span className={styles.reviewDate}>
                   {new Date(review.created_at).toLocaleDateString()}
                 </span>

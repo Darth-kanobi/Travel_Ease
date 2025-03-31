@@ -1,13 +1,23 @@
-import { Link } from 'react-router-dom';
-import styles from './HotelCard.module.css'; 
+// src/components/HotelCard.jsx
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/auth';
+import styles from './HotelCard.module.css';
 
 export default function HotelCard({ hotel }) {
   const amenities = JSON.parse(hotel.amenities);
+  const { user } = useAuth();
+  const navigate = useNavigate();
   
-  // Safely handle rating - ensure it's treated as a number
   const rating = Number(hotel.rating) || 0;
   const displayRating = rating.toFixed ? rating.toFixed(1) : '0.0';
   
+  const handleBookNow = (e) => {
+    if (!user) {
+      e.preventDefault();
+      navigate('/login');
+    }
+  };
+
   return (
     <div className={styles.hotelCard}>
       <div className={styles.hotelImageContainer}>
@@ -43,41 +53,23 @@ export default function HotelCard({ hotel }) {
           )}
         </div>
         
-        <div className={styles.hotelPrice}>
-          <div className={styles.priceContainer}>
-            <span className={styles.price}>₹{hotel.price.toLocaleString()}</span>
-            <span className={styles.perNight}>/ night</span>
-          </div>
+        <div className={styles.hotelActions}>
+          <Link 
+            to={`/hotels/${hotel.id}`} 
+            className={styles.viewDetailsButton}
+          >
+            View Details & Reviews
+          </Link>
+          
           <Link 
             to="/booking" 
             state={{ hotel }}
             className={styles.bookButton}
+            onClick={handleBookNow}
           >
             Book Now
           </Link>
-          <Link 
-             to="/booking" 
-               state={{ hotel }}
-                className={styles.bookButton}
-                 onClick={(e) => {
-                      if (!user) {
-                         e.preventDefault();
-                          navigate('/login');
-                      }
-                   }}
-                        >
-                    Book Now
-                </Link>
-                <div className={styles.hotelActions}>
-        <Link 
-          to={`/hotels/${hotel.id}`} 
-          className={styles.viewDetailsButton}
-        >
-          View Details & Reviews
-        </Link>
-        <button className={styles.bookButton}>Book Now</button>
-      </div>
- </div>
+        </div>
       </div>
     </div>
   );

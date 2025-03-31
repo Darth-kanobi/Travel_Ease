@@ -1,23 +1,17 @@
+/* src/components/HotelCard.module.css */
 .hotelCard {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  height: 100%;
   display: flex;
-  flex-direction: column;
-}
-
-.hotelCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .hotelImageContainer {
+  width: 300px;
   position: relative;
-  height: 220px;
-  flex-shrink: 0;
 }
 
 .hotelImage {
@@ -28,41 +22,25 @@
 
 .hotelRating {
   position: absolute;
-  bottom: 15px;
-  left: 15px;
+  bottom: 10px;
+  right: 10px;
   background: rgba(0, 0, 0, 0.7);
   color: white;
   padding: 5px 10px;
-  border-radius: 20px;
+  border-radius: 4px;
   font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  backdrop-filter: blur(2px);
-}
-
-.hotelRating span {
-  margin-left: 5px;
-  font-weight: bold;
 }
 
 .hotelDetails {
+  flex: 1;
   padding: 20px;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
 
-.hotelDetails h3 {
-  margin: 0 0 10px 0;
-  font-size: 1.4rem;
-  color: #222;
-  line-height: 1.3;
-}
-
 .hotelLocation {
   color: #666;
-  margin: 0 0 15px 0;
-  font-size: 0.95rem;
+  margin: 8px 0;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -72,89 +50,50 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 20px 0;
+  margin: 15px 0;
 }
 
 .amenityBadge {
   background: #f0f0f0;
-  padding: 5px 12px;
-  border-radius: 15px;
+  padding: 5px 10px;
+  border-radius: 20px;
   font-size: 0.8rem;
-  color: #555;
-  white-space: nowrap;
 }
 
 .amenityMore {
-  background: #f0f0f0;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  color: #777;
-}
-
-.hotelPrice {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
-}
-
-.priceContainer {
-  display: flex;
-  align-items: baseline;
-}
-
-.price {
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #222;
-}
-
-.perNight {
   color: #666;
-  font-size: 0.9rem;
-  margin-left: 5px;
+  font-size: 0.8rem;
+  align-self: center;
+}
+
+.hotelActions {
+  margin-top: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.viewDetailsButton {
+  padding: 10px 15px;
+  background: #f0f0f0;
+  color: #333;
+  border-radius: 4px;
+  text-decoration: none;
+  text-align: center;
+  flex: 1;
 }
 
 .bookButton {
-  background: #138808; /* Indian flag green */
+  padding: 10px 15px;
+  background: #FF9933;
   color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
+  border-radius: 4px;
   text-decoration: none;
   text-align: center;
-  min-width: 120px;
+  flex: 1;
+  border: none;
+  cursor: pointer;
 }
 
 .bookButton:hover {
-  background: #0e6e06;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 10px rgba(19, 136, 8, 0.2);
-}
-
-/* Responsive adjustments */
-@media (max-width: 480px) {
-  .hotelImageContainer {
-    height: 180px;
-  }
-  
-  .hotelDetails {
-    padding: 15px;
-  }
-  
-  .hotelDetails h3 {
-    font-size: 1.2rem;
-  }
-  
-  .bookButton {
-    padding: 8px 15px;
-    min-width: 100px;
-  }
+  background: #e68a2e;
 }

@@ -10,44 +10,69 @@ export default function Hotels() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [searchInput, setSearchInput] = useState(searchQuery?.to || '');
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchHotels = async () => {
-      try {
-        if (!searchQuery?.to) {
+  const handleSearch = (e) => {
+    e.preventDefault();
+    navigate('/hotels', { state: { searchQuery: { to: searchInput } } });
+  };
+
+ // Update the fetchHotels useEffect in Hotels.jsx
+useEffect(() => {
+  const fetchHotels = async () => {
+    try {
+      if (!searchQuery?.to) {
+        // Only navigate if there's no initial search query
+        if (!state?.fromBooking) {
           navigate('/');
-          return;
         }
-
-        const res = await fetch(
-          `http://localhost:3001/api/hotels?city=${searchQuery.to}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${user?.token}`
-            }
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error('Failed to fetch hotels');
-        }
-
-        const data = await res.json();
-        setHotels(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        return;
       }
-    };
 
-    fetchHotels();
-  }, [searchQuery, user, navigate]);
+      const res = await fetch(
+        `http://localhost:3001/api/hotels?city=${searchQuery.to}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${user?.token}`
+          }
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch hotels');
+      }
+
+      const data = await res.json();
+      setHotels(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchHotels();
+}, [searchQuery, user, navigate, state]);
 
   return (
     <div className={styles.hotelsPage}>
+      <div className={styles.searchContainer}>
+        <form onSubmit={handleSearch} className={styles.searchForm}>
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Search for another destination..."
+            className={styles.searchInput}
+          />
+          <button type="submit" className={styles.searchButton}>
+            Search
+          </button>
+        </form>
+      </div>
+      
       <h2 className={styles.pageTitle}>Hotels in {searchQuery?.to}</h2>
       
       {loading ? (

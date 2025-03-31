@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Home.css';
 
+// Aviation Stack API key (should be in environment variables in production)
+const API_KEY = 'YOUR_AVIATION_STACK_API_KEY';
+const API_BASE = 'http://api.aviationstack.com/v1';
+
 export default function Home() {
+  const [flights, setFlights] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [activeTab, setActiveTab] = useState('flights');
   const [searchQuery, setSearchQuery] = useState({
     from: '',
@@ -75,16 +81,67 @@ export default function Home() {
     };
     fetchDestinations();
   }, []);
+  const fetchFlights = async (fromCode, toCode, date) => {
+    setIsSearching(true);
+    try {
+      const response = await fetch(
+        `${API_BASE}/flights?access_key=${API_KEY}&dep_iata=${fromCode}&arr_iata=${toCode}&flight_date=${date}`
+      );
+      const data = await response.json();
+      
+      if (data.data && data.data.length > 0) {
+        // Process flight data
+        const processedFlights = data.data.map(flight => ({
+          id: flight.flight.number,
+          airline: flight.airline.name,
+          flightNumber: flight.flight.number,
+          departure: {
+            airport: flight.departure.airport,
+            time: flight.departure.scheduled,
+            terminal: flight.departure.terminal || 'T1'
+          },
+          arrival: {
+            airport: flight.arrival.airport,
+            time: flight.arrival.scheduled,
+            terminal: flight.arrival.terminal || 'T1'
+          },
+          price: Math.floor(Math.random() * 5000) + 3000, // Mock price since API doesn't provide
+          duration: calculateFlightDuration(
+            flight.departure.scheduled,
+            flight.arrival.scheduled
+          )
+        }));
+        
+        setFlights(processedFlights);
+      } else {
+        setFlights([]);
+      }
+    } catch (error) {
+      console.error('Error fetching flights:', error);
+      setFlights([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
-  const handleSearch = (e) => {
+  const calculateFlightDuration = (departureTime, arrivalTime) => {
+    const dep = new Date(departureTime);
+    const arr = new Date(arrivalTime);
+    const diff = arr - dep;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  };
+
+  const handleSearch = async (e) => {
     e.preventDefault();
     
     // Validate city selection
-    const fromCityValid = indianCities.some(city => city.name === searchQuery.from);
-    const toCityValid = indianCities.some(city => city.name === searchQuery.to);
+    const fromCity = indianCities.find(city => city.name === searchQuery.from);
+    const toCity = indianCities.find(city => city.name === searchQuery.to);
     
     if (activeTab === 'flights') {
-      if (!fromCityValid || !toCityValid) {
+      if (!fromCity || !toCity) {
         alert('Please select from our served cities: Mumbai, Delhi, Bangalore, Hyderabad, Kochi');
         return;
       }
@@ -92,8 +149,12 @@ export default function Home() {
         alert('Please select a departure date');
         return;
       }
+      
+      // Fetch flights from API
+      await fetchFlights(fromCity.code, toCity.code, searchQuery.depart);
+      
     } else { // hotels
-      if (!toCityValid) {
+      if (!toCity) {
         alert('Please select from our served cities: Mumbai, Delhi, Bangalore, Hyderabad, Kochi');
         return;
       }
@@ -101,10 +162,12 @@ export default function Home() {
         alert('Please select both check-in and check-out dates');
         return;
       }
+      
+      navigate(`/${activeTab}`, { state: { searchQuery } });
     }
-    
-    navigate(`/${activeTab}`, { state: { searchQuery } });
   };
+
+
 
   return (
     <div className="home-container">
@@ -266,6 +329,55 @@ export default function Home() {
           </button>
         </form>
       </div>
+      {activeTab === 'flights' && flights.length > 0 && (
+    <section className="flight-results">
+      <h2>Available Flights</h2>
+      <div className="flights-grid">
+        {flights.map(flight => (
+          <div key={flight.id} className="flight-card">
+            <div className="flight-header">
+              <h3>{flight.airline}</h3>
+              <span className="flight-number">{flight.flightNumber}</span>
+            </div>
+            <div className="flight-details">
+              <div className="departure">
+                <div className="time">{new Date(flight.departure.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                <div className="airport">{flight.departure.airport}</div>
+                <div className="terminal">Terminal {flight.departure.terminal}</div>
+              </div>
+              <div className="duration">
+                <div className="line"></div>
+                <div className="time">{flight.duration}</div>
+                <div className="line"></div>
+              </div>
+              <div className="arrival">
+                <div className="time">{new Date(flight.arrival.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                <div className="airport">{flight.arrival.airport}</div>
+                <div className="terminal">Terminal {flight.arrival.terminal}</div>
+              </div>
+            </div>
+            <div className="flight-footer">
+              <div className="price">₹{flight.price}</div>
+              <button 
+                className="book-button"
+                onClick={() => navigate('/booking', { state: { flight, searchQuery } })}
+              >
+                Book Now
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {/* No Flights Found Message */}
+  {activeTab === 'flights' && flights.length === 0 && isSearching === false && (
+    <div className="no-flights">
+      <p>No flights found for your selected route and date.</p>
+      <p>Please try different cities or dates.</p>
+    </div>
+  )}
 
       {/* Popular Destinations */}
       <section className="destinations-section">
