@@ -1,0 +1,69 @@
+.hotelsPage {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+  }
+  
+  .pageTitle {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    color: #222;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .pageTitle::after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 3px;
+    background: #138808; /* Indian flag green */
+    bottom: -10px;
+    left: 25%;
+  }
+  
+  .hotelsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+  
+  .loadingHotels {
+    text-align: center;
+    padding: 50px 0;
+    color: #666;
+  }
+  
+  .noHotels {
+    text-align: center;
+    padding: 30px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    color: #666;
+    grid-column: 1 / -1;
+  }
+  
+  .errorMessage {
+    text-align: center;
+    padding: 20px;
+    background: #ffebee;
+    color: #d32f2f;
+    border-radius: 8px;
+    margin: 20px 0;
+    grid-column: 1 / -1;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .hotelsList {
+      grid-template-columns: 1fr;
+    }
+    
+    .pageTitle {
+      font-size: 1.8rem;
+    }
+  }
