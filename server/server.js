@@ -11,14 +11,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_secure_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET || 'your_secure_random_string';
 
 // User registration
 app.post('/api/signup', async (req, res) => {
   try {
     const { name, email, password } = req.body;
     
-    // Basic validation
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'All fields are required' });
     }
@@ -76,73 +75,94 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Get flights
+// Get flights from database
+// Updated flights endpoint
 app.get('/api/flights', async (req, res) => {
   try {
     const { departure_city, arrival_city, date } = req.query;
-    let query = 'SELECT * FROM flights WHERE 1=1';
-    const params = [];
     
-    if (departure_city) {
-      query += ' AND departure_city = ?';
-      params.push(departure_city);
+    // Validate required parameters
+    if (!departure_city || !arrival_city || !date) {
+      return res.status(400).json({ 
+        error: 'Missing required parameters: departure_city, arrival_city, and date' 
+      });
     }
-    if (arrival_city) {
-      query += ' AND arrival_city = ?';
-      params.push(arrival_city);
-    }
-    if (date) {
-      query += ' AND DATE(departure_time) = ?';
-      params.push(date);
-    }
+
+    // Format date for MySQL query (YYYY-MM-DD)
+    const formattedDate = new Date(date).toISOString().split('T')[0];
     
-    query += ' ORDER BY departure_time ASC';
-    
-    const [flights] = await pool.execute(query, params);
+    // Query flights from database
+    const [flights] = await pool.execute(
+      `SELECT * FROM flights 
+       WHERE departure_city = ? 
+       AND arrival_city = ?
+       AND DATE(departure_time) = ?
+       ORDER BY departure_time ASC`,
+      [departure_city, arrival_city, formattedDate]
+    );
+
+    if (flights.length === 0) {
+      return res.status(404).json({ 
+        error: 'No flights found for the selected route and date' 
+      });
+    }
+
     res.json(flights);
-  } catch (err) {
-    console.error('Flights error:', err);
-    res.status(500).json({ error: 'Failed to fetch flights' });
+  } catch (error) {
+    console.error('Flight fetch error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch flights',
+      details: error.message
+    });
   }
 });
 
-// Hotels endpoints
+// Helper function to calculate flight duration
+function calculateDuration(departureTime, arrivalTime) {
+  const dep = new Date(departureTime);
+  const arr = new Date(arrivalTime);
+  const diff = arr - dep;
+  
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  
+  return `${hours}h ${minutes}m`;
+}
+
+// Updated hotels endpoint
 app.get('/api/hotels', async (req, res) => {
   try {
     const { city } = req.query;
-    let query = 'SELECT * FROM hotels';
-    const params = [];
     
-    if (city) {
-      query += ' WHERE city = ?';
-      params.push(city);
+    if (!city) {
+      return res.status(400).json({ error: 'City parameter is required' });
     }
-    
-    query += ' ORDER BY rating DESC';
-    
-    const [hotels] = await pool.execute(query, params);
-    res.json(hotels);
+
+    const [hotels] = await pool.execute(
+      `SELECT 
+        id, name, city, location, image, 
+        rating, price, amenities, description
+       FROM hotels 
+       WHERE city = ? 
+       ORDER BY rating DESC`,
+      [city]
+    );
+
+    // Convert amenities text to array if needed
+    const processedHotels = hotels.map(hotel => ({
+      ...hotel,
+      amenities: hotel.amenities ? JSON.parse(hotel.amenities) : []
+    }));
+
+    res.json(processedHotels);
   } catch (err) {
     console.error('Hotels error:', err);
-    res.status(500).json({ error: 'Failed to fetch hotels' });
+    res.status(500).json({ 
+      error: 'Failed to fetch hotels',
+      details: err.message
+    });
   }
 });
-
-app.get('/api/hotels/:id', async (req, res) => {
-  try {
-    const [hotels] = await pool.execute('SELECT * FROM hotels WHERE id = ?', [req.params.id]);
-    
-    if (hotels.length === 0) {
-      return res.status(404).json({ error: 'Hotel not found' });
-    }
-    
-    res.json(hotels[0]);
-  } catch (err) {
-    console.error('Hotel details error:', err);
-    res.status(500).json({ error: 'Failed to fetch hotel details' });
-  }
-});
-
 // Reviews endpoints
 app.get('/api/reviews', async (req, res) => {
   try {
@@ -171,7 +191,6 @@ app.post('/api/reviews', authenticateUser, async (req, res) => {
   try {
     const { hotelId, rating, comment } = req.body;
     
-    // Validate input
     if (!hotelId || !rating || !comment) {
       return res.status(400).json({ error: 'All fields are required' });
     }
@@ -180,7 +199,6 @@ app.post('/api/reviews', authenticateUser, async (req, res) => {
       return res.status(400).json({ error: 'Rating must be between 1 and 5' });
     }
 
-    // Verify hotel exists
     const [hotels] = await pool.execute('SELECT id FROM hotels WHERE id = ?', [hotelId]);
     if (hotels.length === 0) {
       return res.status(404).json({ error: 'Hotel not found' });
@@ -191,7 +209,6 @@ app.post('/api/reviews', authenticateUser, async (req, res) => {
       [hotelId, req.user.id, rating, comment]
     );
     
-    // Get the full review with user info
     const [newReview] = await pool.execute(`
       SELECT r.*, u.name as user_name 
       FROM reviews r
@@ -211,12 +228,10 @@ app.post('/api/bookings', authenticateUser, async (req, res) => {
   try {
     const { hotelId, checkIn, checkOut, guests, rooms } = req.body;
     
-    // Validate input
     if (!hotelId || !checkIn || !checkOut || !guests || !rooms) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    // Verify hotel exists and get price
     const [hotels] = await pool.execute('SELECT price FROM hotels WHERE id = ?', [hotelId]);
     if (hotels.length === 0) {
       return res.status(404).json({ error: 'Hotel not found' });
@@ -231,7 +246,6 @@ app.post('/api/bookings', authenticateUser, async (req, res) => {
       [hotelId, req.user.id, checkIn, checkOut, guests, rooms, totalPrice]
     );
     
-    // Get the full booking details
     const [booking] = await pool.execute(`
       SELECT b.*, h.name as hotel_name, h.location as hotel_location
       FROM bookings b

@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Home.css';
 
-// Aviation Stack API key (should be in environment variables in production)
-const API_KEY = 'YOUR_AVIATION_STACK_API_KEY';
-const API_BASE = 'http://api.aviationstack.com/v1';
+// API configuration - should be in environment variables
+const AVIATION_API_KEY = import.meta.env.VITE_AVIATION_STACK_API_KEY || 'efee488367a87ffac6460d835f0f30fe';
+const AVIATION_API_BASE = 'https://api.aviationstack.com/v1';
+const HOTEL_API_BASE = import.meta.env.VITE_HOTEL_API_BASE || 'http://localhost:3001/api';
 
 export default function Home() {
   const [flights, setFlights] = useState([]);
+  const [hotels, setHotels] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [activeTab, setActiveTab] = useState('flights');
   const [searchQuery, setSearchQuery] = useState({
@@ -19,6 +21,7 @@ export default function Home() {
   });
   const [destinations, setDestinations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   // Indian cities data
@@ -81,49 +84,101 @@ export default function Home() {
     };
     fetchDestinations();
   }, []);
+
   const fetchFlights = async (fromCode, toCode, date) => {
     setIsSearching(true);
+    setError(null);
     try {
-      const response = await fetch(
-        `${API_BASE}/flights?access_key=${API_KEY}&dep_iata=${fromCode}&arr_iata=${toCode}&flight_date=${date}`
-      );
+      const formattedDate = new Date(date).toISOString().split('T')[0];
+      const url = new URL(`${AVIATION_API_BASE}/flights`);
+      url.searchParams.append('access_key', AVIATION_API_KEY);
+      url.searchParams.append('dep_iata', fromCode);
+      url.searchParams.append('arr_iata', toCode);
+      url.searchParams.append('flight_date', formattedDate);
+      
+      const response = await fetch(url.toString());
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch flights');
+      }
+      
       const data = await response.json();
       
       if (data.data && data.data.length > 0) {
-        // Process flight data
         const processedFlights = data.data.map(flight => ({
-          id: flight.flight.number,
-          airline: flight.airline.name,
-          flightNumber: flight.flight.number,
+          id: flight.flight?.number || `${fromCode}-${toCode}-${Date.now()}`,
+          airline: flight.airline?.name || "Unknown Airline",
+          flightNumber: flight.flight?.number || "N/A",
           departure: {
-            airport: flight.departure.airport,
-            time: flight.departure.scheduled,
-            terminal: flight.departure.terminal || 'T1'
+            airport: flight.departure?.airport || "Unknown Airport",
+            time: flight.departure?.scheduled || new Date().toISOString(),
+            terminal: flight.departure?.terminal || 'T1',
+            displayDate: new Date(flight.departure?.scheduled)
+              .toLocaleDateString('en-GB')
+              .replace(/\//g, ' / ')
           },
           arrival: {
-            airport: flight.arrival.airport,
-            time: flight.arrival.scheduled,
-            terminal: flight.arrival.terminal || 'T1'
+            airport: flight.arrival?.airport || "Unknown Airport",
+            time: flight.arrival?.scheduled || new Date().toISOString(),
+            terminal: flight.arrival?.terminal || 'T1'
           },
-          price: Math.floor(Math.random() * 5000) + 3000, // Mock price since API doesn't provide
+          price: Math.floor(Math.random() * 5000) + 3000, // Mock price
           duration: calculateFlightDuration(
-            flight.departure.scheduled,
-            flight.arrival.scheduled
+            flight.departure?.scheduled,
+            flight.arrival?.scheduled
           )
         }));
         
         setFlights(processedFlights);
       } else {
         setFlights([]);
+        setError('No flights found for this route and date');
       }
     } catch (error) {
-      console.error('Error fetching flights:', error);
+      console.error('Flight search error:', error);
+      setError(error.message);
       setFlights([]);
     } finally {
       setIsSearching(false);
     }
   };
 
+  // Fetch hotels from your backend
+  const fetchHotels = async (city, checkIn, checkOut, guests) => {
+    setIsSearching(true);
+    setError(null);
+    try {
+      const response = await fetch(`${HOTEL_API_BASE}/hotels`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          city,
+          checkIn,
+          checkOut,
+          guests: parseInt(guests)
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch hotels');
+      }
+      
+      const data = await response.json();
+      setHotels(data);
+    } catch (error) {
+      console.error('Hotel search error:', error);
+      setError(error.message);
+      setHotels([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // NEW: Calculate flight duration
   const calculateFlightDuration = (departureTime, arrivalTime) => {
     const dep = new Date(departureTime);
     const arr = new Date(arrivalTime);
@@ -135,43 +190,58 @@ export default function Home() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    setError(null);
     
-    // Validate city selection
     const fromCity = indianCities.find(city => city.name === searchQuery.from);
     const toCity = indianCities.find(city => city.name === searchQuery.to);
     
     if (activeTab === 'flights') {
       if (!fromCity || !toCity) {
-        alert('Please select from our served cities: Mumbai, Delhi, Bangalore, Hyderabad, Kochi');
+        setError('Please select from our served cities: Mumbai, Delhi, Bangalore, Hyderabad, Kochi');
         return;
       }
       if (!searchQuery.depart) {
-        alert('Please select a departure date');
+        setError('Please select a departure date');
         return;
       }
-      
-      // Fetch flights from API
-      await fetchFlights(fromCity.code, toCity.code, searchQuery.depart);
-      
-    } else { // hotels
+      // Navigate to flights page with search query
+      navigate('/flights', { 
+        state: { 
+          searchQuery: {
+            from: fromCity.name,
+            to: toCity.name,
+            depart: searchQuery.depart,
+            return: searchQuery.return
+          },
+          skipAuthCheck: true
+        }
+      });
+    } else { 
       if (!toCity) {
-        alert('Please select from our served cities: Mumbai, Delhi, Bangalore, Hyderabad, Kochi');
+        setError('Please select from our served cities: Mumbai, Delhi, Bangalore, Hyderabad, Kochi');
         return;
       }
       if (!searchQuery.depart || !searchQuery.return) {
-        alert('Please select both check-in and check-out dates');
+        setError('Please select both check-in and check-out dates');
         return;
       }
-      
-      navigate(`/${activeTab}`, { state: { searchQuery } });
+      // Navigate to hotels page with search query
+      navigate('/hotels', { 
+        state: { 
+          searchQuery: {
+            to: toCity.name,
+            depart: searchQuery.depart,
+            return: searchQuery.return,
+            guests: searchQuery.guests
+          }
+        }
+      });
     }
   };
 
-
-
   return (
     <div className="home-container">
-      {/* Hero Section with Taj Mahal background */}
+      {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
           <h1>Explore Incredible India</h1>
@@ -185,16 +255,16 @@ export default function Home() {
           </div>
           <div className="auth-buttons flex gap-4 justify-center mt-8">
             <Link
-                to="/Login"
-                className="px-6 py-3 bg-white text-gold-600 font-bold rounded-lg hover:bg-gray-100 transition border border-gold-300">
-                    Login
-             </Link>
-                <Link
-                    to="/signup"
-                    className="px-6 py-3 bg-gold-600 text-white font-bold rounded-lg hover:bg-gold-700 transition">
-                        Signup
-                    </Link>
-                </div>
+              to="/Login"
+              className="px-6 py-3 bg-white text-gold-600 font-bold rounded-lg hover:bg-gray-100 transition border border-gold-300">
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className="px-6 py-3 bg-gold-600 text-white font-bold rounded-lg hover:bg-gold-700 transition">
+              Signup
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -324,61 +394,25 @@ export default function Home() {
               </div>
             </>
           )}
-          <button type="submit" className="search-button">
-            {activeTab === 'flights' ? 'Search Flights' : 'Find Hotels'}
+          <button type="submit" className="search-button" disabled={isSearching}>
+            {isSearching ? 'Searching...' : (activeTab === 'flights' ? 'Search Flights' : 'Find Hotels')}
           </button>
         </form>
       </div>
-      {activeTab === 'flights' && flights.length > 0 && (
-    <section className="flight-results">
-      <h2>Available Flights</h2>
-      <div className="flights-grid">
-        {flights.map(flight => (
-          <div key={flight.id} className="flight-card">
-            <div className="flight-header">
-              <h3>{flight.airline}</h3>
-              <span className="flight-number">{flight.flightNumber}</span>
-            </div>
-            <div className="flight-details">
-              <div className="departure">
-                <div className="time">{new Date(flight.departure.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-                <div className="airport">{flight.departure.airport}</div>
-                <div className="terminal">Terminal {flight.departure.terminal}</div>
-              </div>
-              <div className="duration">
-                <div className="line"></div>
-                <div className="time">{flight.duration}</div>
-                <div className="line"></div>
-              </div>
-              <div className="arrival">
-                <div className="time">{new Date(flight.arrival.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-                <div className="airport">{flight.arrival.airport}</div>
-                <div className="terminal">Terminal {flight.arrival.terminal}</div>
-              </div>
-            </div>
-            <div className="flight-footer">
-              <div className="price">₹{flight.price}</div>
-              <button 
-                className="book-button"
-                onClick={() => navigate('/booking', { state: { flight, searchQuery } })}
-              >
-                Book Now
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  )}
 
-  {/* No Flights Found Message */}
-  {activeTab === 'flights' && flights.length === 0 && isSearching === false && (
-    <div className="no-flights">
-      <p>No flights found for your selected route and date.</p>
-      <p>Please try different cities or dates.</p>
-    </div>
-  )}
+      {/* NEW: Error Message */}
+      {error && (
+        <div className="error-message">
+          <p>{error}</p>
+        </div>
+      )}
 
+      {/* NEW: Loading Indicator */}
+      {isSearching && (
+        <div className="loading-overlay">
+          <div className="loading-spinner"></div>
+        </div>
+      )}
       {/* Popular Destinations */}
       <section className="destinations-section">
         <h2>Explore Our Cities</h2>
