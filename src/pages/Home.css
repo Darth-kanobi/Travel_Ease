@@ -1,84 +1,132 @@
 .home-container {
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    color: #333;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-    background-color: #f9f9f9;
-  }
-  
+  font-family: var(--font-body);
+  color: #333;
+  max-width: 1400px;
+  line-height: 1.6;
+  margin: 0 auto;
+  padding: 0 20px;
+  background-color: #ffffff;
+}
+/* Add this at the top of your Home.css */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+:root {
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Montserrat', sans-serif;
+}  
   /* Hero Section with Indian Theme */
   .hero-section {
-    height: 70vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                url('/images/taj-mahal-bg.jpg') center/cover no-repeat;
+    height: 80vh;
+    background: url('../Images/bg.jpg') center/cover no-repeat;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: white;
     margin-bottom: 50px;
-    border-radius: 10px;
-    position: relative;
+    border-radius: 12px;
     overflow: hidden;
-    animation: fadeIn 1s ease-in;
   }
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+  }
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
   
   .hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
     max-width: 800px;
     padding: 20px;
   }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    text-shadow: #f00000;
+     /* or another contrasting color */
+  }
   
   .hero-content h1 {
-    font-size: 3.2rem;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    animation: slideUp 1s ease;
+    font-size: 3.5rem;
     font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 8px rgba(148, 68, 252, 0.6);
+  }
+  h1, h2, h3, .tab, .search-button {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: 0.5px;
   }
   
   .hero-content p {
     font-size: 1.4rem;
     margin-bottom: 30px;
-    animation: slideUp 1.2s ease;
+    text-shadow: 1px 1px 4px rgb(0, 0, 0);
   }
   
   .city-badges {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-    animation: slideUp 1.4s ease;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 25px 0;
+  text-shadow: #000000;
+}
+
   
-  .city-badge {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
-  }
+.city-badge {
+  background: rgba(255, 255, 255, 0.25); /* Increased opacity */
+  backdrop-filter: blur(6px);
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 500; /* Added medium font weight */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Brighter border */
+  transition: all 0.3s ease;
+  color: rgb(0, 0, 0);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* Added text shadow */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+
   
-  .city-badge:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-  }
+.city-badge:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(218, 2, 2, 0.15);
+}
   
   /* Search Box with Indian Color Scheme */
   .search-box {
+    font-family: var(--font-body);
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    padding: 25px;
-    margin: -50px auto 50px;
-    max-width: 1000px;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    border: 1px solid rgba(0, 68, 255, 0.3);
+    background: linear-gradient(135deg, rgba(214, 179, 179, 0.685), rgba(179, 195, 218, 0.685));
+    backdrop-filter: blur(5px);
+  }
+  .search-container {
+    padding: 0 20px;
+    margin-top: -80px;
     position: relative;
     z-index: 10;
-    animation: slideUp 0.8s ease;
-    border: 1px solid #e0e0e0;
   }
   
   .search-tabs {
@@ -93,14 +141,14 @@
     padding: 12px 25px;
     font-size: 1.1rem;
     cursor: pointer;
-    color: #666;
+    color: #000000;
     transition: all 0.3s ease;
     font-weight: 500;
   }
   
   .tab.active {
-    color: #FF9933; /* Saffron color from Indian flag */
-    border-bottom: 3px solid #FF9933;
+    color: #000000; /* Saffron color from Indian flag */
+    border-bottom: 3px solid #8d0202;
     font-weight: 600;
   }
   
@@ -115,10 +163,11 @@
   }
   
   .form-group label {
+    font-family: var(--font-body);
     display: block;
     margin-bottom: 8px;
-    font-weight: 600;
-    color: #555;
+    font-weight: 800;
+    color: #000000;
     font-size: 0.95rem;
   }
   
@@ -142,8 +191,8 @@
   
   .search-button {
     grid-column: 1 / -1;
-    background: #FF9933;
-    color: white;
+    background: #db6666;
+    color: rgb(255, 255, 255);
     border: none;
     padding: 16px;
     border-radius: 6px;
@@ -157,7 +206,7 @@
   }
   
   .search-button:hover {
-    background: #e68a2e;
+    background: #e21c1c;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(255, 153, 51, 0.3);
   }
@@ -187,7 +236,7 @@
   }
   
   .destinations-section p {
-    color: #666;
+    color: #000000;
     margin-bottom: 40px;
     font-size: 1.1rem;
   }
@@ -201,7 +250,7 @@
   
   .destination-card {
     background: white;
-    border-radius: 10px;
+    border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
@@ -290,18 +339,20 @@
   
   /* Features Section */
   .features-section {
-    margin: 80px 0;
-    text-align: center;
-    background: white;
-    padding: 60px 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    background: linear-gradient(135deg, #FFF9E6 0%, #FFEFB3 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 0 15px 40px rgba(218, 165, 32, 0.15);
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
   }
   
   .features-section h2 {
     font-size: 2.2rem;
     margin-bottom: 10px;
-    color: #222;
+    color: #000000;
+    text-align: center;
   }
   
   .features-section p {
@@ -351,12 +402,30 @@
   }
   
   /* Testimonials */
-  .testimonials-section {
+  .testimonials-section.dark-theme {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: 60px 30px;
+    border-radius: 16px;
     margin: 80px 0;
-    text-align: center;
-    background: linear-gradient(135deg, #f8f8f8, #ffffff);
-    padding: 60px 20px;
-    border-radius: 10px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  .testimonials-section.dark-theme::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 30%, 
+        rgba(255,215,0,0.08) 0%, 
+        transparent 40%),
+      radial-gradient(circle at 80% 70%, 
+        rgba(255,215,0,0.08) 0%, 
+        transparent 40%);
   }
   
   .testimonials-section h2 {
@@ -379,24 +448,33 @@
   }
   
   .testimonial-card {
-    min-width: 350px;
-    background: white;
+    background: rgba(30, 30, 30, 0.8);
+    backdrop-filter: blur(10px);
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    scroll-snap-align: start;
-    text-align: left;
+    border-radius: 12px;
+    border: 1px solid rgba(255,215,0,0.2);
+    transition: transform 0.3s ease;
+  }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+    position: relative;
+    z-index: 2;
   }
   
   .rating {
-    color: #FF9933;
-    font-size: 1.2rem;
+    color: #FFD700;
+    font-size: 1.3rem;
     margin-bottom: 15px;
+    letter-spacing: 2px;
   }
+  
   
   .testimonial-content {
     font-size: 1.1rem;
-    color: #555;
+    color: #ffffff;
     margin-bottom: 20px;
     line-height: 1.6;
     font-style: italic;
@@ -406,6 +484,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
+    
   }
   
   .author-avatar {
@@ -423,6 +502,7 @@
   .author-info {
     display: flex;
     flex-direction: column;
+    color: #f0f0f0
   }
   
   .author-info strong {

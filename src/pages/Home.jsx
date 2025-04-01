@@ -26,7 +26,7 @@ export default function Home() {
 
   // Indian cities data
   const indianCities = [
-    { id: 1, name: 'Mumbai', code: 'BOM', image: 'mumbai.jpg' },
+    { id: 1, name: 'Mumbai', code: 'BOM', image: '../Images/mumbaitaj.jpg'},
     { id: 2, name: 'Delhi', code: 'DEL', image: 'delhi.jpg' },
     { id: 3, name: 'Bangalore', code: 'BLR', image: 'bangalore.jpg' },
     { id: 4, name: 'Hyderabad', code: 'HYD', image: 'hyderabad.jpg' },
@@ -43,7 +43,7 @@ export default function Home() {
           id: 1, 
           city: 'Mumbai', 
           highlights: 'Gateway of India, Marine Drive, Bollywood', 
-          image: 'mumbai.jpg', 
+          image: '../Images/mumbaitaj.jpg', 
           price: '₹4,999', 
           duration: '2h 30m avg flight' 
         },
@@ -241,8 +241,21 @@ export default function Home() {
 
   return (
     <div className="home-container">
+<<<<<<< HEAD
       {/* Hero Section */}
       <section className="hero-section">
+=======
+      <section 
+        className="hero-section"
+        style={{
+          backgroundImage: '../Images/mumbaitaj.jpg',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '500px', // Add appropriate height
+          position: 'relative' // Needed for overlay if you add one
+        }}
+      >
+>>>>>>> 1db57e2b5253e160e09bd589cb9d91b2b88b4662
         <div className="hero-content">
           <h1>Explore Incredible India</h1>
           <p>Book domestic flights and hotels across India's top 5 cities</p>
@@ -255,6 +268,7 @@ export default function Home() {
           </div>
           <div className="auth-buttons flex gap-4 justify-center mt-8">
             <Link
+<<<<<<< HEAD
               to="/Login"
               className="px-6 py-3 bg-white text-gold-600 font-bold rounded-lg hover:bg-gray-100 transition border border-gold-300">
               Login
@@ -265,6 +279,18 @@ export default function Home() {
               Signup
             </Link>
           </div>
+=======
+                to="/Login"
+                className="px-7 py-3 text-black font-bold rounded-lg border border-gold-300 hover:bg-opacity-20 hover:text-gold-200 transition-all duration-200 shadow-[0_4px_15px_rgba(218,165,32,0.2)]">
+                    Login
+             </Link>
+                <Link
+                    to="/signup"
+                    className="px-7 py-3 text-black font-bold rounded-lg border border-gold-300 hover:bg-opacity-20 hover:text-gold-200 transition-all duration-200 shadow-[0_4px_15px_rgba(218,165,32,0.2)]">
+                        Signup
+                    </Link>
+                </div>
+>>>>>>> 1db57e2b5253e160e09bd589cb9d91b2b88b4662
         </div>
       </section>
 
