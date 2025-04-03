@@ -241,58 +241,46 @@ export default function Home() {
 
   return (
     <div className="home-container">
-<<<<<<< HEAD
-      {/* Hero Section */}
-      <section className="hero-section">
-=======
-      <section 
-        className="hero-section"
-        style={{
-          backgroundImage: '../Images/mumbaitaj.jpg',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          minHeight: '500px', // Add appropriate height
-          position: 'relative' // Needed for overlay if you add one
-        }}
-      >
->>>>>>> 1db57e2b5253e160e09bd589cb9d91b2b88b4662
-        <div className="hero-content">
-          <h1>Explore Incredible India</h1>
-          <p>Book domestic flights and hotels across India's top 5 cities</p>
-          <div className="city-badges">
-            {indianCities.map(city => (
-              <span key={city.id} className="city-badge">
-                {city.name} ({city.code})
-              </span>
-            ))}
-          </div>
-          <div className="auth-buttons flex gap-4 justify-center mt-8">
-            <Link
-<<<<<<< HEAD
-              to="/Login"
-              className="px-6 py-3 bg-white text-gold-600 font-bold rounded-lg hover:bg-gray-100 transition border border-gold-300">
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="px-6 py-3 bg-gold-600 text-white font-bold rounded-lg hover:bg-gold-700 transition">
-              Signup
-            </Link>
-          </div>
-=======
-                to="/Login"
-                className="px-7 py-3 text-black font-bold rounded-lg border border-gold-300 hover:bg-opacity-20 hover:text-gold-200 transition-all duration-200 shadow-[0_4px_15px_rgba(218,165,32,0.2)]">
-                    Login
-             </Link>
-                <Link
-                    to="/signup"
-                    className="px-7 py-3 text-black font-bold rounded-lg border border-gold-300 hover:bg-opacity-20 hover:text-gold-200 transition-all duration-200 shadow-[0_4px_15px_rgba(218,165,32,0.2)]">
+        {/* Hero Section */}
+        <section 
+            className="hero-section"
+            style={{
+                backgroundImage: 'url("../Images/mumbaitaj.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                minHeight: '500px',
+                position: 'relative'
+            }}
+        >
+            <div className="hero-content">
+                <h1>Explore Incredible India</h1>
+                <p>Book domestic flights and hotels across India's top 5 cities</p>
+                <div className="city-badges">
+                    {indianCities.map(city => (
+                        <span key={city.id} className="city-badge">
+                            {city.name} ({city.code})
+                        </span>
+                    ))}
+                </div>
+                <div className="auth-buttons flex gap-4 justify-center mt-8">
+                    <Link
+                        to="/login"
+                        className="px-6 py-3 bg-white text-gold-600 font-bold rounded-lg hover:bg-gray-100 transition border border-gold-300"
+                    >
+                        Login
+                    </Link>
+                    <Link
+                        to="/signup"
+                        className="px-6 py-3 bg-gold-600 text-white font-bold rounded-lg hover:bg-gold-700 transition"
+                    >
                         Signup
                     </Link>
                 </div>
->>>>>>> 1db57e2b5253e160e09bd589cb9d91b2b88b4662
-        </div>
-      </section>
+            </div>
+        </section>
+    </div>
+);
+
 
       {/* Search Box */}
       <div className="search-box">
@@ -535,25 +523,28 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+return (
+  <div className="home-container">
       {/* Domestic Travel Tips */}
       <section className="tips-section">
-        <h2>Domestic Travel Tips</h2>
-        <div className="tips-grid">
-          <div className="tip-card">
-            <h3>🛄 Luggage Allowance</h3>
-            <p>Most domestic flights allow 15kg check-in + 7kg cabin baggage</p>
+          <h2>Domestic Travel Tips</h2>
+          <div className="tips-grid">
+              <div className="tip-card">
+                  <h3>🛄 Luggage Allowance</h3>
+                  <p>Most domestic flights allow 15kg check-in + 7kg cabin baggage</p>
+              </div>
+              <div className="tip-card">
+                  <h3>⏰ Check-in Times</h3>
+                  <p>Arrive at least 2 hours before departure for domestic flights</p>
+              </div>
+              <div className="tip-card">
+                  <h3>🆔 ID Requirements</h3>
+                  <p>Carry valid government photo ID (Aadhar, Passport, or Driving License)</p>
+              </div>
           </div>
-          <div className="tip-card">
-            <h3>⏰ Check-in Times</h3>
-            <p>Arrive at least 2 hours before departure for domestic flights</p>
-          </div>
-          <div className="tip-card">
-            <h3>🆔 ID Requirements</h3>
-            <p>Carry valid government photo ID (Aadhar, Passport, or Driving License)</p>
-          </div>
-        </div>
       </section>
-    </div>
-  );
+  </div>
+);
 }
+
+
