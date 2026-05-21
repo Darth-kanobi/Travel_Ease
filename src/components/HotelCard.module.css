@@ -97,3 +97,27 @@
 .bookButton:hover {
   background: #e68a2e;
 }
+
+.roomAvailability {
+  margin: 5px 0 15px 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.lowRooms {
+  color: #ea580c;
+  background-color: rgba(255, 153, 51, 0.1);
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 153, 51, 0.2);
+  display: inline-block;
+}
+
+.normalRooms {
+  color: #138808;
+  background-color: rgba(19, 136, 8, 0.08);
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(19, 136, 8, 0.15);
+  display: inline-block;
+}

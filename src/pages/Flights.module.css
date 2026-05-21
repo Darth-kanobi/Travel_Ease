@@ -1,4 +1,4 @@
-.hotelsPage {
+.flightsPage {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px 20px 60px 20px;
@@ -92,67 +92,19 @@
   color: #ffffff;
 }
 
-/* Search Bar with Glassmorphic styling */
-.searchContainer {
-  margin-top: -50px;
-  position: relative;
-  z-index: 10;
-  padding: 0 20px;
-  margin-bottom: 40px;
-}
-
-.searchForm {
-  display: flex;
-  gap: 12px;
-  max-width: 700px;
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.searchInput {
-  flex: 1;
-  padding: 14px 20px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: white;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.searchInput:focus {
-  border-color: #FF9933;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.15);
-}
-
-.searchButton {
-  padding: 14px 28px;
-  background: linear-gradient(135deg, #FF9933 0%, #FF7F27 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
+/* Route details in banner */
+.routeBadge {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, #FF9933 0%, #138808 100%);
+  padding: 6px 14px;
+  border-radius: 20px;
   font-weight: 700;
-  transition: all 0.3s ease;
-  font-family: inherit;
-  box-shadow: 0 4px 10px rgba(255, 153, 51, 0.2);
-}
-
-.searchButton:hover {
-  background: linear-gradient(135deg, #FF7F27 0%, #E66F1B 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(255, 153, 51, 0.35);
-}
-
-.searchButton:active {
-  transform: translateY(0);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* Results Header */
@@ -184,21 +136,21 @@
   background: #138808; /* Green */
 }
 
-.hotelCount {
+.searchDate {
   font-size: 0.95rem;
   color: #666;
   font-weight: 500;
 }
 
-/* Hotels List */
-.hotelsList {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 25px;
+/* Flights List */
+.flightsList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Loading, Error, Empty */
-.loadingHotels, .errorMessage, .noHotels {
+.loadingFlights, .errorMessage, .noFlights {
   text-align: center;
   padding: 60px 20px;
   background: white;
@@ -239,40 +191,6 @@
   background: #e68a2e;
 }
 
-.suggestions {
-  margin-top: 25px;
-}
-
-.suggestions p {
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 15px;
-}
-
-.cityButtons {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.cityButton {
-  padding: 8px 16px;
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.cityButton:hover {
-  background: #FF9933;
-  color: white;
-  border-color: #FF9933;
-  transform: translateY(-2px);
-}
-
 /* Animations */
 @keyframes spin {
   0% { transform: rotate(0deg); }
@@ -311,16 +229,6 @@
   
   .bannerContent {
     padding: 25px;
-  }
-  
-  .searchContainer {
-    margin-top: -20px;
-    padding: 0 10px;
-  }
-  
-  .searchForm {
-    flex-direction: column;
-    padding: 12px;
   }
   
   .resultsHeader {
