@@ -1,0 +1,433 @@
+/* src/pages/MyBookings.css */
+.my-bookings-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  font-family: 'Montserrat', sans-serif;
+  color: #222;
+}
+
+.bookings-header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.bookings-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF9933 0%, #138808 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.bookings-header p {
+  font-size: 1.1rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.bookings-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 1rem;
+}
+
+.bookings-loading .spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 153, 51, 0.15);
+  border-left-color: #FF9933;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.bookings-error {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  color: #b91c1c;
+  margin-bottom: 2rem;
+}
+
+.bookings-error button {
+  margin-top: 1rem;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.bookings-error button:hover {
+  background-color: #dc2626;
+}
+
+.empty-bookings {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 4rem 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.empty-bookings h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.75rem;
+}
+
+.empty-bookings p {
+  color: #555;
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.empty-bookings .explore-btn {
+  background: linear-gradient(135deg, #FF9933 0%, #FF7F27 100%);
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(255, 153, 51, 0.2);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.empty-bookings .explore-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 153, 51, 0.35);
+  background: linear-gradient(135deg, #FF7F27 0%, #E66F1B 100%);
+}
+
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.booking-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+}
+
+.booking-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.booking-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: rgba(243, 244, 246, 0.5);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.header-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.booking-ref-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #4b586e;
+  background-color: rgba(0, 35, 102, 0.05);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(0, 35, 102, 0.08);
+}
+
+.booking-type-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  letter-spacing: 0.5px;
+}
+
+.booking-type-badge.hotel {
+  background-color: rgba(255, 153, 51, 0.1);
+  color: #ea580c;
+  border: 1px solid rgba(255, 153, 51, 0.2);
+}
+
+.booking-type-badge.flight {
+  background-color: rgba(19, 136, 8, 0.1);
+  color: #138808;
+  border: 1px solid rgba(19, 136, 8, 0.2);
+}
+
+.booking-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #138808;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #138808;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 8px #138808;
+}
+
+.booking-card-body {
+  display: flex;
+  padding: 1.5rem;
+  gap: 1.5rem;
+}
+
+/* Hotel Specific layout */
+.booking-image-wrapper {
+  flex-shrink: 0;
+  width: 140px;
+  height: 100px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.booking-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.booking-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.booking-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 0.25rem;
+}
+
+.booking-info .location {
+  color: #555;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.booking-dates-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  max-width: 300px;
+}
+
+.booking-dates-grid .label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #666;
+  font-weight: 700;
+}
+
+.booking-dates-grid .value {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.booking-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #666;
+}
+
+/* Flight Specific layout */
+.flight-route-info {
+  width: 100%;
+}
+
+.flight-airline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.flight-airline .airline-icon {
+  font-size: 1.75rem;
+}
+
+.flight-airline h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.flight-airline .flight-number {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  background-color: rgba(255, 153, 51, 0.1);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+}
+
+.flight-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fafafa;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+.flight-station {
+  display: flex;
+  flex-direction: column;
+}
+
+.flight-station .city {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #111;
+}
+
+.flight-station .time {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #FF9933;
+}
+
+.flight-station .date {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 600;
+}
+
+.flight-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #bbb;
+  font-weight: 700;
+}
+
+.flight-arrow span {
+  font-size: 1.25rem;
+}
+
+.flight-arrow .type {
+  font-size: 0.75rem;
+  color: #138808;
+  font-weight: 700;
+}
+
+.booking-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: rgba(243, 244, 246, 0.25);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.booking-date {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 600;
+}
+
+.booking-price {
+  font-size: 0.95rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.booking-price strong {
+  font-size: 1.25rem;
+  color: #138808;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .booking-card-body {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .booking-image-wrapper {
+    width: 100%;
+    height: 150px;
+  }
+  
+  .flight-details-row {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .flight-arrow {
+    align-self: center;
+    transform: rotate(90deg);
+  }
+  
+  .booking-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+}

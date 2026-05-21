@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/auth';
 import styles from './HotelReview.module.css';
 
@@ -10,28 +11,30 @@ export default function HotelReviews({ hotelId }) {
   });
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const fetchReviews = async () => {
+    try {
+      const res = await fetch(`/api/reviews?hotelId=${hotelId}`);
+      
+      if (!res.ok) {
+        throw new Error('Failed to fetch reviews');
+      }
+
+      const data = await res.json();
+      setReviews(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error:', err);
+      setReviews([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const res = await fetch(`http://localhost:3001/api/reviews?hotelId=${hotelId}`);
-        
-        if (!res.ok) {
-          throw new Error('Failed to fetch reviews');
-        }
-
-        const data = await res.json();
-        setReviews(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error('Error:', err);
-        setReviews([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
     fetchReviews();
   }, [hotelId]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) {
@@ -41,7 +44,7 @@ export default function HotelReviews({ hotelId }) {
     }
   
     try {
-      const res = await fetch('http://localhost:3001/api/reviews', {
+      const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -111,7 +114,7 @@ export default function HotelReviews({ hotelId }) {
                   {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
                 </span>
                 <span className={styles.reviewUser}>
-                  {review.user?.name || 'Anonymous'}
+                  {review.user_name || 'Anonymous'}
                 </span>
                 <span className={styles.reviewDate}>
                   {new Date(review.created_at).toLocaleDateString()}

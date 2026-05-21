@@ -85,21 +85,34 @@ export default function HotelDetails() {
       </div>
 
       <div className={styles.hotelImageContainer}>
-        <img 
-          src={`/images/hotels/${hotel.image || 'default.jpg'}`} 
+         <img 
+          src={`/Images/${hotel.image || 'mumbaitaj.jpg'}`} 
           alt={hotel.name}
           className={styles.hotelImage}
           onError={(e) => {
-            e.target.src = '/images/hotels/default.jpg';
+            e.target.src = '/Images/mumbaitaj.jpg';
           }}
         />
       </div>
 
       <div className={styles.hotelInfo}>
-        <p className={styles.location}>
-          <span className={styles.icon}>📍</span>
-          {hotel.location}
-        </p>
+        <div className={styles.locationAndAvailability}>
+          <p className={styles.location}>
+            <span className={styles.icon}>📍</span>
+            {hotel.location}
+          </p>
+          {hotel.roomsAvailable !== undefined && (
+            <div className={styles.roomAvailability}>
+              {hotel.roomsAvailable === 0 ? (
+                <span className={styles.soldOut}>❌ Sold Out</span>
+              ) : hotel.roomsAvailable <= 5 ? (
+                <span className={styles.lowRooms}>⚠️ High Demand: Only {hotel.roomsAvailable} rooms left!</span>
+              ) : (
+                <span className={styles.normalRooms}>🟢 {hotel.roomsAvailable} Rooms Available</span>
+              )}
+            </div>
+          )}
+        </div>
         <p className={styles.price}>
           ₹{hotel.price.toLocaleString('en-IN')} <span className={styles.perNight}>/ night</span>
         </p>
@@ -126,13 +139,19 @@ export default function HotelDetails() {
       <HotelReviews hotelId={hotel.id} />
 
       <div className={styles.bookingSection}>
-        <Link
-          to="/booking"
-          state={{ hotel }}
-          className={styles.bookNowButton}
-        >
-          Book Now
-        </Link>
+        {hotel.roomsAvailable === 0 ? (
+          <button className={styles.soldOutButton} disabled>
+            Sold Out
+          </button>
+        ) : (
+          <Link
+            to="/booking"
+            state={{ hotel }}
+            className={styles.bookNowButton}
+          >
+            Book Now
+          </Link>
+        )}
       </div>
     </div>
   );

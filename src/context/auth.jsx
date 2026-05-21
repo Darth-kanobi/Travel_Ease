@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
         } else {
           setUser({ 
             token,
-            userId: decoded.userId,
+            userId: decoded.id || decoded.userId,
             email: decoded.email,
             name: decoded.name
           });
@@ -51,7 +51,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('token', token);
     setUser({ 
       token,
-      userId: decoded.userId,
+      userId: decoded.id || decoded.userId,
       email: decoded.email,
       name: decoded.name
     });
