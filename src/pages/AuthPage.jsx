@@ -20,7 +20,7 @@ export default function AuthPage({ isLogin }) {
     setError('');
     
     try {
-      const response = await fetch(`http://localhost:3001/api/${isLogin ? 'login' : 'signup'}`, {
+      const response = await fetch(`/api/${isLogin ? 'login' : 'signup'}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(isLogin ? {
@@ -32,7 +32,7 @@ export default function AuthPage({ isLogin }) {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || 'Authentication failed');
+        throw new Error(data.error || data.message || 'Authentication failed');
       }
       
       localStorage.setItem('token', data.token);

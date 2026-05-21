@@ -4,7 +4,11 @@ import { useAuth } from '../context/auth';
 import styles from './HotelCard.module.css';
 
 export default function HotelCard({ hotel }) {
-  const amenities = JSON.parse(hotel.amenities);
+  const amenities = Array.isArray(hotel.amenities)
+    ? hotel.amenities
+    : (typeof hotel.amenities === 'string'
+        ? (hotel.amenities.trim().startsWith('[') ? JSON.parse(hotel.amenities) : hotel.amenities.split(',').map(s => s.trim()))
+        : []);
   const { user } = useAuth();
   const navigate = useNavigate();
   
@@ -22,9 +26,12 @@ export default function HotelCard({ hotel }) {
     <div className={styles.hotelCard}>
       <div className={styles.hotelImageContainer}>
         <img 
-          src={`/images/hotels/${hotel.image}`} 
+          src={`/Images/${hotel.image || 'mumbaitaj.jpg'}`} 
           alt={hotel.name}
           className={styles.hotelImage}
+          onError={(e) => {
+            e.target.src = '/Images/mumbaitaj.jpg';
+          }}
         />
         <div className={styles.hotelRating}>
           {'★'.repeat(Math.floor(rating))}
@@ -51,6 +58,16 @@ export default function HotelCard({ hotel }) {
           {amenities.length > 4 && (
             <span className={styles.amenityMore}>+{amenities.length - 4}</span>
           )}
+        </div>
+
+        <div className={styles.roomAvailability}>
+          {hotel.roomsAvailable !== undefined ? (
+            hotel.roomsAvailable <= 5 ? (
+              <span className={styles.lowRooms}>⚠️ Only {hotel.roomsAvailable} rooms left!</span>
+            ) : (
+              <span className={styles.normalRooms}>🏨 {hotel.roomsAvailable} rooms available</span>
+            )
+          ) : null}
         </div>
         
         <div className={styles.hotelActions}>

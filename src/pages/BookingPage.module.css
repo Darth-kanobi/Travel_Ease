@@ -1,113 +1,313 @@
 .bookingContainer {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 1.5rem;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .hotelInfo {
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .hotelInfo h2 {
-    color: #333;
-    margin-bottom: 0.5rem;
-  }
-  
-  .hotelInfo p {
-    color: #666;
-    margin: 0.3rem 0;
-  }
-  
-  .bookingForm {
-    display: flex;
+  max-width: 800px;
+  margin: 3rem auto;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 35, 102, 0.05);
+  border: 1px solid rgba(242, 233, 216, 0.5);
+  font-family: inherit;
+}
+
+.hotelInfo {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0, 35, 102, 0.08);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #8a7043;
+  background-color: rgba(194, 168, 120, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hotelInfo h2 {
+  color: #0b1a30;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0.5rem 0;
+}
+
+.location {
+  color: #6e7c91;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.pricePerNight {
+  color: #c2a878;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.bookingForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.bookingForm h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0b1a30;
+  margin-bottom: 0.5rem;
+  border-left: 3px solid #c2a878;
+  padding-left: 10px;
+}
+
+.formRow {
+  display: flex;
+  gap: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .formRow {
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.2rem;
   }
-  
-  .formGroup {
-    display: flex;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: #4b586e;
+  font-size: 0.9rem;
+}
+
+.formGroup input,
+.formGroup select {
+  padding: 0.8rem 1rem;
+  border: 1px solid #d2dbe5;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #0b1a30;
+  background-color: #fafbfc;
+  transition: all 0.2s ease;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  outline: none;
+  border-color: #c2a878;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(194, 168, 120, 0.15);
+}
+
+.paymentCard {
+  background-color: #fafbfc;
+  border: 1px solid #eef2f6;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.cardIcons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0b1a30;
+}
+
+.secureBadge {
+  color: #10b981;
+  font-size: 0.8rem;
+  background: rgba(16, 185, 129, 0.08);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.cardDetails {
+  display: flex;
+  gap: 1rem;
+}
+
+.cardDetails .formGroup {
+  flex: 1;
+}
+
+.payButton {
+  background: linear-gradient(135deg, #c2a878 0%, #8a7043 100%);
+  color: white;
+  padding: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(194, 168, 120, 0.3);
+  transition: all 0.2s ease;
+}
+
+.payButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(194, 168, 120, 0.4);
+  filter: brightness(1.03);
+}
+
+.payButton:disabled {
+  background: #aab6c4;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.errorBanner {
+  background-color: rgba(239, 68, 68, 0.08);
+  border-left: 4px solid #ef4444;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #b91c1c;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.successContainer {
+  max-width: 600px;
+  margin: 5rem auto;
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 35, 102, 0.08);
+  border: 1px solid rgba(242, 233, 216, 0.5);
+}
+
+.successIcon {
+  width: 72px;
+  height: 72px;
+  background-color: rgba(16, 185, 129, 0.1);
+  border-radius: 50%;
+  color: #10b981;
+  font-size: 2.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.successContainer h2 {
+  color: #0b1a30;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.8rem;
+}
+
+.successContainer p {
+  color: #4b586e;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.successSubtext {
+  color: #8d9bb0 !important;
+  font-size: 0.95rem !important;
+  margin-top: 0.5rem;
+}
+
+.successActions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+@media (max-width: 500px) {
+  .successActions {
     flex-direction: column;
-    gap: 0.5rem;
   }
-  
-  .formGroup label {
-    font-weight: 600;
-    color: #444;
-  }
-  
-  .formGroup input,
-  .formGroup textarea,
-  .formGroup select {
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
-  
-  .paymentCard {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-  }
-  
-  .cardIcons {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .cardDetails {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .cardDetails .formGroup {
-    flex: 1;
-  }
-  
-  .payButton {
-    background-color: #4CAF50;
-    color: white;
-    padding: 1rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: background-color 0.3s;
-  }
-  
-  .payButton:hover {
-    background-color: #45a049;
-  }
-  
-  .successContainer {
-    max-width: 600px;
-    margin: 3rem auto;
-    padding: 2rem;
-    text-align: center;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .successContainer h2 {
-    color: #4CAF50;
-    margin-bottom: 1rem;
-  }
-  
-  .successContainer button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    margin-top: 1.5rem;
-    cursor: pointer;
-  }
+}
+
+.dashboardBtn {
+  background: linear-gradient(135deg, #0b1a30 0%, #173054 100%);
+  color: white;
+  padding: 0.9rem 1.8rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(11, 26, 48, 0.15);
+  transition: all 0.2s ease;
+}
+
+.dashboardBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(11, 26, 48, 0.25);
+  filter: brightness(1.1);
+}
+
+.homeBtn {
+  background-color: transparent;
+  color: #8a7043;
+  border: 1px solid #c2a878;
+  padding: 0.9rem 1.8rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.homeBtn:hover {
+  background-color: rgba(194, 168, 120, 0.05);
+  transform: translateY(-1px);
+}
+
+.bookingRefCard {
+  margin: 1.5rem auto;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 153, 51, 0.05) 0%, rgba(19, 136, 8, 0.05) 100%);
+  border: 1px solid rgba(194, 168, 120, 0.3);
+  border-radius: 8px;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  box-shadow: 0 4px 12px rgba(194, 168, 120, 0.1);
+}
+
+.bookingRefLabel {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #6e7c91;
+  letter-spacing: 0.5px;
+}
+
+.bookingRefValue {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0b1a30;
+  letter-spacing: 1px;
+}
+
+.availabilityLabel {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.lowAvailability {
+  color: #FF9933; /* Saffron Alert */
+}
+
+.normalAvailability {
+  color: #138808; /* Green Safe */
+}

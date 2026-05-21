@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/auth';
 import './Home.css';
 
 // API configuration - should be in environment variables
@@ -23,14 +24,15 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
 
   // Indian cities data
   const indianCities = [
-    { id: 1, name: 'Mumbai', code: 'BOM', image: '../Images/mumbaitaj.jpg'},
-    { id: 2, name: 'Delhi', code: 'DEL', image: 'delhi.jpg' },
-    { id: 3, name: 'Bangalore', code: 'BLR', image: 'bangalore.jpg' },
-    { id: 4, name: 'Hyderabad', code: 'HYD', image: 'hyderabad.jpg' },
-    { id: 5, name: 'Kochi', code: 'COK', image: 'kochi.jpg' }
+    { id: 1, name: 'Mumbai', code: 'BOM', image: '/Images/mumbaitaj.jpg'},
+    { id: 2, name: 'Delhi', code: 'DEL', image: '/Images/delhi.png' },
+    { id: 3, name: 'Bangalore', code: 'BLR', image: '/Images/bangalore.png' },
+    { id: 4, name: 'Hyderabad', code: 'HYD', image: '/Images/hyderabad.png' },
+    { id: 5, name: 'Kochi', code: 'COK', image: '/Images/kochi.png' }
   ];
 
   // Mock data fetch for popular destinations
@@ -43,7 +45,7 @@ export default function Home() {
           id: 1, 
           city: 'Mumbai', 
           highlights: 'Gateway of India, Marine Drive, Bollywood', 
-          image: '../Images/mumbaitaj.jpg', 
+          image: '/Images/mumbaitaj.jpg', 
           price: '₹4,999', 
           duration: '2h 30m avg flight' 
         },
@@ -51,7 +53,7 @@ export default function Home() {
           id: 2, 
           city: 'Delhi', 
           highlights: 'Red Fort, Qutub Minar, India Gate', 
-          image: 'delhi.jpg', 
+          image: '/Images/delhi.png', 
           price: '₹3,999', 
           duration: '2h 15m avg flight' 
         },
@@ -59,7 +61,7 @@ export default function Home() {
           id: 3, 
           city: 'Bangalore', 
           highlights: 'Lalbagh, Cubbon Park, Tech Parks', 
-          image: 'bangalore.jpg', 
+          image: '/Images/bangalore.png', 
           price: '₹5,499', 
           duration: '1h 45m avg flight' 
         },
@@ -67,7 +69,7 @@ export default function Home() {
           id: 4, 
           city: 'Hyderabad', 
           highlights: 'Charminar, Golconda Fort, Biryani', 
-          image: 'hyderabad.jpg', 
+          image: '/Images/hyderabad.png', 
           price: '₹4,299', 
           duration: '1h 30m avg flight' 
         },
@@ -75,7 +77,7 @@ export default function Home() {
           id: 5, 
           city: 'Kochi', 
           highlights: 'Backwaters, Fort Kochi, Kathakali', 
-          image: 'kochi.jpg', 
+          image: '/Images/kochi.png', 
           price: '₹6,999', 
           duration: '3h avg flight' 
         }
@@ -241,46 +243,46 @@ export default function Home() {
 
   return (
     <div className="home-container">
-        {/* Hero Section */}
-        <section 
-            className="hero-section"
-            style={{
-                backgroundImage: 'url("../Images/mumbaitaj.jpg")',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: '500px',
-                position: 'relative'
-            }}
-        >
-            <div className="hero-content">
-                <h1>Explore Incredible India</h1>
-                <p>Book domestic flights and hotels across India's top 5 cities</p>
-                <div className="city-badges">
-                    {indianCities.map(city => (
-                        <span key={city.id} className="city-badge">
-                            {city.name} ({city.code})
-                        </span>
-                    ))}
-                </div>
-                <div className="auth-buttons flex gap-4 justify-center mt-8">
-                    <Link
-                        to="/login"
-                        className="px-6 py-3 bg-white text-gold-600 font-bold rounded-lg hover:bg-gray-100 transition border border-gold-300"
-                    >
-                        Login
-                    </Link>
-                    <Link
-                        to="/signup"
-                        className="px-6 py-3 bg-gold-600 text-white font-bold rounded-lg hover:bg-gold-700 transition"
-                    >
-                        Signup
-                    </Link>
-                </div>
+      {/* Hero Section */}
+      <section 
+        className="hero-section"
+        style={{
+          backgroundImage: 'url("/Images/bg.jpg")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '500px',
+          position: 'relative'
+        }}
+      >
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <h1>Explore Incredible India</h1>
+          <p>Book domestic flights and hotels across India's top 5 cities</p>
+          <div className="city-badges">
+            {indianCities.map(city => (
+              <span key={city.id} className="city-badge">
+                {city.name} ({city.code})
+              </span>
+            ))}
+          </div>
+          {!authLoading && !user && (
+            <div className="auth-buttons flex gap-4 justify-center mt-8">
+              <Link
+                to="/login"
+                className="px-6 py-3 bg-white text-gold-600 font-bold rounded-lg hover:bg-gray-100 transition border border-gold-300"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className="px-6 py-3 bg-gold-600 text-white font-bold rounded-lg hover:bg-gold-700 transition"
+              >
+                Signup
+              </Link>
             </div>
-        </section>
-    </div>
-);
-
+          )}
+        </div>
+      </section>
 
       {/* Search Box */}
       <div className="search-box">
@@ -414,19 +416,20 @@ export default function Home() {
         </form>
       </div>
 
-      {/* NEW: Error Message */}
+      {/* Error Message */}
       {error && (
         <div className="error-message">
           <p>{error}</p>
         </div>
       )}
 
-      {/* NEW: Loading Indicator */}
+      {/* Loading Indicator */}
       {isSearching && (
         <div className="loading-overlay">
           <div className="loading-spinner"></div>
         </div>
       )}
+
       {/* Popular Destinations */}
       <section className="destinations-section">
         <h2>Explore Our Cities</h2>
@@ -440,7 +443,7 @@ export default function Home() {
               <div key={destination.id} className="destination-card">
                 <div 
                   className="destination-image"
-                  style={{ backgroundImage: `url(/images/${destination.image})` }}
+                  style={{ backgroundImage: `url(${destination.image})` }}
                 >
                   <div className="price-badge">{destination.price}</div>
                   <div className="duration-badge">{destination.duration}</div>
@@ -448,15 +451,46 @@ export default function Home() {
                 <div className="destination-info">
                   <h3>{destination.city}</h3>
                   <p className="highlights">{destination.highlights}</p>
-                  <button 
-                    className="explore-button"
-                    onClick={() => {
-                      setSearchQuery({...searchQuery, to: destination.city});
-                      setActiveTab('hotels');
-                    }}
-                  >
-                    Explore Hotels
-                  </button>
+                  <div className="explore-actions">
+                    <button 
+                      className="explore-flights-btn"
+                      onClick={() => {
+                        const today = new Date().toISOString().split('T')[0];
+                        const defaultFrom = indianCities.find(c => c.name !== destination.city)?.name || 'Delhi';
+                        navigate('/flights', { 
+                          state: { 
+                            searchQuery: {
+                              from: defaultFrom,
+                              to: destination.city,
+                              depart: searchQuery.depart || today
+                            },
+                            skipAuthCheck: true
+                          }
+                        });
+                      }}
+                    >
+                      ✈️ Flights
+                    </button>
+                    <button 
+                      className="explore-hotels-btn"
+                      onClick={() => {
+                        const today = new Date().toISOString().split('T')[0];
+                        const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+                        navigate('/hotels', { 
+                          state: { 
+                            searchQuery: {
+                              to: destination.city,
+                              depart: searchQuery.depart || today,
+                              return: searchQuery.return || tomorrow,
+                              guests: searchQuery.guests || 1
+                            }
+                          }
+                        });
+                      }}
+                    >
+                      🏨 Hotels
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -509,7 +543,7 @@ export default function Home() {
             </div>
           </div>
           <div className="testimonial-card">
-            <div className="rating">★★★★☆</div>
+            <div className="rating">★★¼☆</div>
             <div className="testimonial-content">
               "Found a perfect hotel in Bangalore for my business trip. Great customer support!"
             </div>
@@ -523,28 +557,27 @@ export default function Home() {
           </div>
         </div>
       </section>
-return (
-  <div className="home-container">
+
       {/* Domestic Travel Tips */}
       <section className="tips-section">
-          <h2>Domestic Travel Tips</h2>
-          <div className="tips-grid">
-              <div className="tip-card">
-                  <h3>🛄 Luggage Allowance</h3>
-                  <p>Most domestic flights allow 15kg check-in + 7kg cabin baggage</p>
-              </div>
-              <div className="tip-card">
-                  <h3>⏰ Check-in Times</h3>
-                  <p>Arrive at least 2 hours before departure for domestic flights</p>
-              </div>
-              <div className="tip-card">
-                  <h3>🆔 ID Requirements</h3>
-                  <p>Carry valid government photo ID (Aadhar, Passport, or Driving License)</p>
-              </div>
+        <h2>Domestic Travel Tips</h2>
+        <div className="tips-grid">
+          <div className="tip-card">
+            <h3>🛄 Luggage Allowance</h3>
+            <p>Most domestic flights allow 15kg check-in + 7kg cabin baggage</p>
           </div>
+          <div className="tip-card">
+            <h3>⏰ Check-in Times</h3>
+            <p>Arrive at least 2 hours before departure for domestic flights</p>
+          </div>
+          <div className="tip-card">
+            <h3>🆔 ID Requirements</h3>
+            <p>Carry valid government photo ID (Aadhar, Passport, or Driving License)</p>
+          </div>
+        </div>
       </section>
-  </div>
-);
+    </div>
+  );
 }
 
 
